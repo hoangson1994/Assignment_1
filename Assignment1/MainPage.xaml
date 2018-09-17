@@ -1,0 +1,97 @@
+﻿<Page
+    x:Class="Assignment1.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Assignment1"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:entity="using:Assignment1.Entity"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Pivot x:Name="Pvmain" Background="{ThemeResource SystemControlChromeHighAcrylicElementMediumBrush}" >
+            <Pivot.Title>
+                <Grid>
+                    <TextBlock Text="Users Management Application " Style="{ThemeResource SubheaderTextBlockStyle}"/>
+                </Grid>
+            </Pivot.Title>
+            <PivotItem x:Name="Home" Header="Home" Margin="0">
+                <StackPanel>
+                    <AppBarButton x:Name="SearchBtn" Icon="Find" Click="SearchBtn_Click"></AppBarButton>
+                    <TextBlock x:Name="LabelSearch" Visibility="Collapsed"></TextBlock>
+                    <ListView x:Name="MenuList"
+                          ItemsSource="{x:Bind Users , Mode=TwoWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="entity:User">
+                                <StackPanel
+                                Tapped="User_Tapped"
+                                Orientation="Horizontal" 
+                                Padding="12" 
+                                Tag="{Binding}"                                
+                                AutomationProperties.Name="{Binding Name}">
+                                    <Image Source="{Binding Avatar}"
+                                       Height="50" Width="50" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Style="{ThemeResource BaseTextBlockStyle}" Foreground="{ThemeResource SystemControlPageTextBaseHighBrush}" Margin="12,0,0,0"/>
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </PivotItem>
+            <PivotItem x:Name="User_Form" Header="User Form" Margin="0">
+                <!--Form Example-->
+                <Grid Background="White">
+                    <RelativePanel>
+                        <StackPanel x:Name="GeneralInformation" Margin="20">
+                            <RelativePanel>
+                                <Button Name="Button_ChooseImg" Margin="0, 0, 0 , 0" Width="80" Height="80" Click="OnSelectImg">
+                                    <RelativePanel>
+                                        <StackPanel Name="AvatarBtnContent">
+                                            <FontIcon Glyph="&#xEB9F;"></FontIcon>
+                                            <TextBlock Margin="0, 5, 0, 0">Avatar</TextBlock>
+                                        </StackPanel>
+                                        <ProgressRing IsActive="True" Visibility="Collapsed" Name="UploadImgProgress"/>
+                                        <Image Visibility="Collapsed" Name="AvatarPreview"/>
+                                    </RelativePanel>
+                                </Button>
+                                <Button Content="Capture Photo" RelativePanel.Below="Button_ChooseImg" Margin="0,10,0,0" Click="CapturePhoto"></Button>
+                            </RelativePanel>
+                            <TextBox x:Name="Name" Header= "Fullname" Margin="0,24,0,0" MaxLength="320" Width="400" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="Email" Header="Email" Margin="0,24,0,0" Width="400" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="Phone" Header="Phone" Margin="0,24,0,0" MaxLength="50" Width="400" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="Address" Header="Address" Margin="0,24,0,0" MaxLength="50" Width="400" HorizontalAlignment="Left"/>
+                            
+                            <Button Margin="0, 24, 0, 0" 
+                                Background="DodgerBlue"
+                                Foreground="White" 
+                                Click="OnSubmit"
+                                Content="Submit" />
+                        </StackPanel>
+                    </RelativePanel>
+                </Grid>
+            </PivotItem>
+            <PivotItem x:Name="User_Detail" Header="User Detail" Visibility="Collapsed">
+                <StackPanel>
+                    <Image x:Name="Avatar_Detail" Width="200" Height="200"></Image>
+                    <TextBlock Text="Name :"></TextBlock>
+                    <TextBlock x:Name="Name_Detail"></TextBlock>
+                    <TextBlock Text="Email :"></TextBlock>
+                    <TextBlock x:Name="Email_Detail"></TextBlock>
+                    <TextBlock Text="Phone :"></TextBlock>
+                    <TextBlock x:Name="Phone_Detail"></TextBlock>
+                    <TextBlock Text="Address :"></TextBlock>
+                    <TextBlock x:Name="Address_Detail"></TextBlock>
+                </StackPanel>
+            </PivotItem>
+        </Pivot>
+        <ContentDialog x:Name="MyDialog" Title="Search User">
+            <StackPanel>
+                <ComboBox x:Name="MyComboBox" ItemsSource="{x:Bind list_search}" PlaceholderText="Pick a kind" Margin="0,10,0,10" SelectionChanged="MyComboBox_SelectionChanged"/>
+                <TextBox x:Name="SearchInput" Header="Search"></TextBox>
+                <Button x:Name="SubmitSearch" Content="Search" Margin="0,10,0,0" Click="SubmitSearch_Click"></Button>
+            </StackPanel>
+        </ContentDialog>
+    </Grid>
+</Page>
