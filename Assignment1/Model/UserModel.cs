@@ -51,9 +51,11 @@ namespace Assignment1.Model
 
         public static ObservableCollection<Entity.User> GetUsersSearch(string inputSearch, string kindSearch)
         {
+           
             kindSearch = kindSearch.ToLower();
+                
             DataAccess.InitializeDatabase();
-            
+
             listUser = new ObservableCollection<Entity.User>();
 
             using (SqliteConnection db = new SqliteConnection("Filename=users_manager.db"))
@@ -61,8 +63,10 @@ namespace Assignment1.Model
                 db.Open();
 
                 SqliteCommand selectCommand = new SqliteCommand();
-                selectCommand.Connection = db;
-                selectCommand.CommandText = "SELECT * FROM users WHERE " + kindSearch + " LIKE '%" + inputSearch + "%'"; ;
+                selectCommand.Connection = db;               
+              
+                selectCommand.CommandText = "SELECT * FROM users WHERE " + kindSearch + " LIKE '%" + inputSearch + "%'";
+                              
                 SqliteDataReader sqliteData = selectCommand.ExecuteReader();
                 Entity.User user;
                 while (sqliteData.Read())
@@ -80,7 +84,7 @@ namespace Assignment1.Model
                 }
                 db.Close();
             }
-            
+            //UWPConsole.BackgroundConsole.WriteLine("sd " + listUser.Count);
             return listUser;
         }
 

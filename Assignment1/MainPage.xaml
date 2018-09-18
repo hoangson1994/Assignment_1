@@ -23,7 +23,7 @@
                     <ListView x:Name="MenuList"
                           ItemsSource="{x:Bind Users , Mode=TwoWay}">
                         <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="entity:User">
+                            <DataTemplate>
                                 <StackPanel
                                 Tapped="User_Tapped"
                                 Orientation="Horizontal" 

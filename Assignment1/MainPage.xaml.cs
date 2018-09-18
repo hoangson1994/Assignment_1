@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -31,18 +33,41 @@ namespace Assignment1
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    /// 
+
+    // --- Implament interface INotifyPropertyChanged to update view when source change ---
+    public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
-        public ObservableCollection<User> Users { get => Model.UserModel.GetUsers(); set => Model.UserModel.SetUsers(value); }
-        public string avatar = "https://www.google.com.vn/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiPhMukisLdAhWKbisKHYoNB6kQjRx6BAgBEAU&url=http%3A%2F%2Fwww.technodoze.com%2Fweb-designing%2Fdynamically-change-image-opacity-with.html&psig=AOvVaw3a4xMtNLh7iPeXiNfkaUxO&ust=1537275117586161";
-        public string kindSearch = "name";
-        ObservableCollection<string> list_search = new ObservableCollection<string>();
+                 
+        public ObservableCollection<User> users;
+        public ObservableCollection<User> Users
+        {
+            get => users;
+            set
+            {
+                if (users != value)
+                {
+                    users = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private string kindSearch = "name";
+        private string avatar = "https://www.google.com.vn/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiPhMukisLdAhWKbisKHYoNB6kQjRx6BAgBEAU&url=http%3A%2F%2Fwww.technodoze.com%2Fweb-designing%2Fdynamically-change-image-opacity-with.html&psig=AOvVaw3a4xMtNLh7iPeXiNfkaUxO&ust=1537275117586161";
+        private ObservableCollection<string> list_search = new ObservableCollection<string>();
         public MainPage()
         {          
             this.InitializeComponent();
             list_search.Add("Email");
             list_search.Add("Name");
-            list_search.Add("Phone");           
+            list_search.Add("Phone");
+            Users = Model.UserModel.GetUsers();
         }
 
         private void User_Tapped(object sender, TappedRoutedEventArgs e)
@@ -175,10 +200,9 @@ namespace Assignment1
 
         private void SubmitSearch_Click(object sender, RoutedEventArgs e)
         {
-            string searchInput = SearchInput.Text;
-            Users.Clear();
+            string searchInput = SearchInput.Text;            
             Users = Model.UserModel.GetUsersSearch(searchInput, kindSearch);
-            Debug.WriteLine(Users.Count);
+            //UWPConsole.BackgroundConsole.WriteLine("lo " + Users.Count);
             LabelSearch.Text = "Result Search For " + kindSearch + " : " + searchInput;
             LabelSearch.Visibility = Visibility.Visible;
             MyDialog.Hide();
@@ -186,7 +210,7 @@ namespace Assignment1
 
         private void MyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            kindSearch = (string)MyComboBox.SelectedItem;
+            kindSearch = (string)MyComboBox.SelectedItem;            
         }
     }
 
